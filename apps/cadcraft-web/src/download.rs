@@ -17,6 +17,10 @@ pub fn download(name: &str, mime: &str, bytes: &[u8]) -> Result<(), String> {
     if name.trim().is_empty() {
         return Err("a file name is required".into());
     }
+    // Ardoise host bridge: a drawing (.dxf / .dwg) saved inside an iframe goes to the host instead.
+    if crate::bridge::post_saved(name, bytes) {
+        return Ok(());
+    }
     let window = web_sys::window().ok_or("no browser window")?;
     let document = window.document().ok_or("no browser document")?;
     let body = document.body().ok_or("the page has no body")?;

@@ -28,7 +28,7 @@
 	= Equals	= Дорівнює
 	> Greater than	> Більше ніж
 	About	Про програму
-	About CADCraft	Про CADCraft
+	About Ardoise CAO	Про Ardoise CAO
 	Absolute	Абсолютні
 	Add Leader	Додати виноску
 	Align	Вирівняти
@@ -81,7 +81,7 @@
 	ByBlock	За блоком
 	ByColor	За кольором
 	ByLayer	За шаром
-	CADCraft Help	Довідка CADCraft
+	Ardoise CAO Help	Довідка Ardoise CAO
 	Cancel	Скасувати
 	Cartesian (x, y)	Декартові (x, y)
 	Center	Центр
@@ -351,7 +351,7 @@
 	Isolate Layer	Ізолювати шар
 	Isometric Drafting	Ізометричне креслення
 	Join	Об'єднати
-	Join the ArtCraft Discord…	Приєднатися до Discord ArtCraft…
+	Join the Ardoise Discord…	Приєднатися до Discord Ardoise…
 	Join us on Discord	Приєднуйтеся до нас у Discord
 	Language	Мова
 	Last	Останній
@@ -407,7 +407,7 @@
 	Lock Layer	Заблокувати шар
 	Lock/Unlock	Заблокувати/розблокувати
 	Loft	Тіло за перерізами
-	MIT OR Apache-2.0. Not affiliated with Autodesk, Inc.	MIT OR Apache-2.0. Не пов'язано з Autodesk, Inc.
+	MIT OR Apache-2.0.	MIT OR Apache-2.0.
 	MODEL	МОДЕЛЬ
 	MText	Багаторядковий текст
 	Magenta	Пурпуровий
@@ -478,7 +478,7 @@
 	Offset	Зміщення
 	On	Увімкнено
 	On/Off	Увімкнути/вимкнути
-	One of the Crafting Apps by the ArtCraft team and community.	Одна з програм Crafting Apps від команди та спільноти ArtCraft.
+	One of the Crafting Apps by the Ardoise team and community.	Одна з програм Crafting Apps від команди та спільноти Ardoise.
 	Open (⌘O)	Відкрити (⌘O)
 	Open Sample Drawing	Відкрити зразок креслення
 	Open sample drawing	Відкрити зразок креслення
@@ -555,7 +555,7 @@
 	Quick Select Properties	Властивості швидкого вибору
 	Quick Select...	Швидкий вибір...
 	QuickCalc	Калькулятор
-	Quit CADCraft	Вийти з CADCraft
+	Quit Ardoise CAO	Вийти з Ardoise CAO
 	Radius	Радіус
 	Raster Image	Растрове зображення
 	Ray	Промінь
@@ -957,7 +957,7 @@
 @plural	{n} contributor	{n} учасник|{n} учасники|{n} учасників
 	Drawing as bytes	Креслення як байти
 	Services	Служби
-	Hide CADCraft	Приховати CADCraft
+	Hide Ardoise CAO	Приховати Ardoise CAO
 	Hide Others	Приховати інші
 	Accessibility	Спеціальні можливості
 	Show System Cursor	Показувати системний курсор

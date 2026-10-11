@@ -241,7 +241,7 @@ pub fn not_saved_message(lost: &std::collections::BTreeMap<String, usize>) -> Op
         return None;
     }
     let list: Vec<String> = lost.iter().map(|(t, n)| format!("{n} {t}")).collect();
-    Some(format!("Not saved (CADCraft can't write these object types yet): {}", list.join(", ")))
+    Some(format!("Not saved (Ardoise CAO can't write these object types yet): {}", list.join(", ")))
 }
 
 /// Whether `path` is saved as a drawing (DXF, DWG) rather than exported as an image.

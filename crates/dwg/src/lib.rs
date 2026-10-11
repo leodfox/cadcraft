@@ -62,7 +62,7 @@ mod native {
     /// runaway conversion stops at the limit instead of filling memory first.
     pub fn dwg_to_dxf_with(bytes: &[u8], limits: Limits) -> Result<Vec<u8>, String> {
         if bytes.len() > limits.max_dwg_bytes {
-            return Err(format!("DWG: the file is {}, larger than the {} CADCraft opens", mb(bytes.len() as u64), mb(limits.max_dwg_bytes as u64)));
+            return Err(format!("DWG: the file is {}, larger than the {} Ardoise CAO opens", mb(bytes.len() as u64), mb(limits.max_dwg_bytes as u64)));
         }
         let doc = std::panic::catch_unwind(|| acadrust::DwgReader::from_stream(Cursor::new(bytes)).read())
             .map_err(|_| "the DWG reader failed on this file".to_string())?

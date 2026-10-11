@@ -96,6 +96,14 @@ impl Inbox {
         });
     }
 
+    /// A file sent by the embedding page (Ardoise bridge): same size check as a dropped file.
+    pub fn receive(&self, name: String, bytes: Vec<u8>) {
+        match CadApp::open_size_error(&name, bytes.len() as u64) {
+            Some(e) => self.push(Err(e)),
+            None => self.push(Ok((name, bytes))),
+        }
+    }
+
     fn push(&self, upload: Upload) {
         let mut files = self.files.take();
         files.push(upload);

@@ -7,6 +7,8 @@
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
 #[cfg(target_arch = "wasm32")]
+mod bridge;
+#[cfg(target_arch = "wasm32")]
 pub mod download;
 
 #[cfg(target_arch = "wasm32")]
@@ -94,6 +96,9 @@ mod web {
                         // No paths on the web: OPEN asks the browser's file picker, which reads the
                         // chosen file in the background (`upload.rs`), so the picker returns none.
                         let inbox = crate::upload::Inbox::new(&cc.egui_ctx);
+                        // Ardoise host bridge (BRIDGE.md): files sent by the embedding page open like dropped ones.
+                        let from_host = inbox.clone();
+                        crate::bridge::install(move |name, bytes| from_host.receive(name, bytes));
                         let picker = inbox.clone();
                         app.services.pick_open = Some(Box::new(move || {
                             picker.pick();
@@ -107,7 +112,7 @@ mod web {
                 match result {
                     Ok(()) => el.remove(),
                     Err(e) => {
-                        el.set_inner_html(&format!("<p>CADCraft failed to start: {e:?}</p><p>A browser with WebGPU or WebGL2 is required.</p>"))
+                        el.set_inner_html(&format!("<p>Ardoise CAO failed to start: {e:?}</p><p>A browser with WebGPU or WebGL2 is required.</p>"))
                     }
                 }
             }
