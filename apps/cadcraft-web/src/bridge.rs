@@ -1,14 +1,14 @@
 //! Ardoise host bridge (postMessage). Protocol: see BRIDGE.md in the Ardoise repository.
 //!   -> parent  {type:"ready", app}                           once the editor is up
 //!   <- editor  {type:"open", name, bytes:ArrayBuffer}         only from window.parent at ?parentOrigin=
-//!   -> parent  {type:"saved", app, name, bytes:ArrayBuffer}   native-format save inside an iframe
+//!   -> parent  {type:"saved", app, name, bytes:ArrayBuffer, export:bool}   save / export inside an iframe (v2): export=false for the native format, true otherwise
 //! The bridge is disabled (no listener, no messages) without a valid `?parentOrigin=`.
 
 use wasm_bindgen::JsCast;
 use web_sys::js_sys;
 
 const ARDOISE_APP: &str = "cad";
-/// Extensions whose Save / Save As is handed to the host (everything else still downloads).
+/// Extensions of the native document format: `saved` carries `export: false` for them, `export: true` otherwise.
 const NATIVE_EXTS: &[&str] = &["dxf", "dwg"];
 
 fn js_err(e: wasm_bindgen::JsValue) -> String {
@@ -123,20 +123,35 @@ pub fn install(on_open: impl Fn(String, Vec<u8>) + 'static) {
     }
 }
 
-/// Native-format save inside an iframe: hand the bytes to the host instead of downloading.
-/// Returns true when the bytes were posted.
+/// Save / export inside an iframe: hand the bytes to the host instead of downloading (BRIDGE.md v2).
+/// `export` is false for the native format, true for anything else. Returns true when the bytes were posted.
 pub fn post_saved(name: &str, bytes: &[u8]) -> bool {
-    let ext = name.rsplit('.').next().map(str::to_ascii_lowercase).unwrap_or_default();
-    if !in_iframe() || parent_origin().is_none() || !NATIVE_EXTS.contains(&ext.as_str()) {
+    if !in_iframe() || parent_origin().is_none() {
         return false;
     }
+    let ext = name.rsplit('.').next().map(str::to_ascii_lowercase).unwrap_or_default();
+    let export = !NATIVE_EXTS.contains(&ext.as_str());
     let buffer = js_sys::Uint8Array::from(bytes).buffer();
-    let msg = message(&[("type", "saved".into()), ("app", ARDOISE_APP.into()), ("name", name.into()), ("bytes", buffer.into())]);
+    let msg = message(&[
+        ("type", "saved".into()),
+        ("app", ARDOISE_APP.into()),
+        ("name", name.into()),
+        ("bytes", buffer.into()),
+        ("export", export.into()),
+    ]);
     match post_to_parent(&msg) {
         Ok(()) => true,
         Err(e) => {
             log::error!("bridge: saved message failed ({e}); falling back to download");
             false
         }
+    }
+}
+
+/// Tell the host whether the document has unsaved changes (only inside an iframe).
+#[allow(dead_code)]
+pub fn post_dirty(dirty: bool) {
+    if in_iframe() && parent_origin().is_some() {
+        let _ = post_to_parent(&message(&[("type", "dirty".into()), ("app", ARDOISE_APP.into()), ("dirty", dirty.into())]));
     }
 }

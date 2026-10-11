@@ -798,7 +798,13 @@ fn run_plot(s: &mut Session, p: &Value, cmd: &str) -> Result<Value> {
                 Ok(json!({ "path": path, "bytes": bytes.len(), "layout": layout }))
             }
             #[cfg(target_arch = "wasm32")]
-            Err(bad(cmd, "paths are not available on the web; omit `path` to get the PDF as base64 `data`"))
+            {
+                // No file system: hand the PDF to the host (a browser download, or the embedding page).
+                let name = _path.rsplit(['/', '\\']).next().filter(|n| !n.is_empty()).unwrap_or("plot.pdf");
+                let deliver = super::file::deliver().ok_or_else(|| bad(cmd, "paths are not available on the web; omit `path` to get the PDF as base64 `data`"))?;
+                deliver(name, "application/pdf", &bytes).map_err(|e| bad(cmd, format!("{name}: {e}")))?;
+                Ok(json!({ "delivered": name, "bytes": bytes.len(), "layout": layout }))
+            }
         }
         None => Ok(json!({ "data": base64_encode(&bytes), "bytes": bytes.len(), "layout": layout })),
     }
